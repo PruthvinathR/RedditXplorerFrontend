@@ -23,7 +23,7 @@ const ChatBox: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2, height: '70vh', display: 'flex', flexDirection: 'column', marginTop: '80px', width: '80%' }}>
+    <Paper elevation={3} sx={{ p: 2, height: '70%', display: 'flex', flexDirection: 'column', marginTop: '30px', width: '80%' }}>
       <Typography variant="h6" gutterBottom>
         Chat Box
       </Typography>

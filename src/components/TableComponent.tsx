@@ -3,7 +3,7 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/ma
 
 
 
-const TableComponent = ({ data, handleRowClick }: { data: any, handleRowClick: (id: number) => void }) => {
+const TableComponent = ({ data, handleRowClick }: { data: any, handleRowClick: (id: string) => void }) => {
   
   return (
     <>
@@ -18,7 +18,7 @@ const TableComponent = ({ data, handleRowClick }: { data: any, handleRowClick: (
             </TableHead>
             <TableBody>
               {data.map((row: any) => (
-                <TableRow key={row.post_id} onClick={() => handleRowClick(row.id)}>
+                <TableRow key={row.post_id} onClick={() => handleRowClick(row.post_id)}>
                   <TableCell>{row.username}</TableCell>
                   <TableCell>{row.title}</TableCell>
                   <TableCell>{row.upvotes}</TableCell>
