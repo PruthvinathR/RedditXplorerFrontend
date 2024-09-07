@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { Box, Select, MenuItem, SelectChangeEvent, CircularProgress, Typography } from '@mui/material';
+import { Box, Select, MenuItem, SelectChangeEvent, CircularProgress, Typography, Divider } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
 import { GlobalContext } from '../App';
 import ChatBox from './ChatBox';
 import { analyzePost, getPosts } from '../services/api';
+import CommentBox from './CommentBox';
 
 
 interface RedditPost {
@@ -130,12 +131,25 @@ const RedditAnalyzer = () => {
             </Box>
           )
         ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}>
-            <Typography variant="h6" color="textSecondary" sx={{ display: 'flex', marginTop: '16px', justifyContent: 'flex-start' }}>{selectedPost?.title}</Typography>
-            <Typography variant="body1" color="textSecondary" sx={{ display: 'flex', marginTop: '8px', justifyContent: 'flex-start', maxWidth: '80%', textAlign: 'left' }}>
-              {selectedPostData?.body || ""}
-            </Typography>
-            <ChatBox />
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100vh' }}>
+            <Box sx={{ padding: '16px', borderBottom: '1px solid #ccc' }}>
+              <Typography variant="h6">{selectedPost?.title}</Typography>
+              <Typography variant="body2" sx={{ marginTop: '8px' }}>
+                {selectedPostData?.body || ""}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
+              <Box sx={{ display: 'flex', width: '50%', height: '100%', justifyContent: 'center' }}>
+                <CommentBox comments={selectedPostData?.comments || []} />
+              </Box>
+              <Divider orientation="vertical" flexItem />
+              <Box sx={{ width: '50%', 
+  height: '100%', 
+  display: 'flex', 
+  justifyContent: 'center',  }}>
+                <ChatBox />
+              </Box>
+            </Box>
           </Box>
         )}
       </>
