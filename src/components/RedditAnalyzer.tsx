@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Box, Select, MenuItem, SelectChangeEvent, CircularProgress, Typography, Divider } from '@mui/material';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Box, Select, MenuItem, SelectChangeEvent, CircularProgress, Typography, Divider, Paper, Fade, Skeleton, Button } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SearchComponent from './SearchComponent';
 import TableComponent from './TableComponent';
@@ -7,6 +7,8 @@ import { GlobalContext } from '../App';
 import ChatBox from './ChatBox';
 import { analyzePost, getPosts } from '../services/api';
 import CommentBox from './CommentBox';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
 interface RedditPost {
@@ -25,6 +27,9 @@ const RedditAnalyzer = () => {
   const [data, setData] = useState<RedditPost[]>([]);
   const [selectedPost, setSelectedPost] = useState<RedditPost | null>(null);
   const [selectedPostData, setSelectedPostData] = useState<RedditPost | null>(null);
+  const [loading, setLoading] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
 
   const { chatWindowShown, setChatWindowShown } = useContext(GlobalContext);
 
@@ -34,6 +39,18 @@ const RedditAnalyzer = () => {
     { value: 'hot', label: 'Hot' },
     { value: 'rising', label: 'Rising' },
   ];
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const contentHeight = contentRef.current.scrollHeight;
+      const screenHeight = window.innerHeight;
+      setExpanded(contentHeight <= screenHeight * 0.20);
+    }
+  }, [selectedPost, selectedPostData]);
+
+  const toggleExpand = () => {
+    setExpanded(expanded => !expanded);
+  };
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log(process.env.REACT_APP_BACKEND_URL);
@@ -86,13 +103,15 @@ const RedditAnalyzer = () => {
         justifyContent: submitted ? 'flex-start' : 'center',
         minHeight: '100vh',
         transition: 'all 0.3s ease-in-out',
-        paddingTop: submitted ? '20px' : '0',
+        paddingTop: submitted ? '80px' : '0',
     }}>
       <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', position: submitted ? 'fixed' : 'relative',
       top: submitted ? '20px' : 'auto',
       left: submitted ? '50%' : 'auto',
       transform: submitted ? 'translateX(-50%)' : 'none',
       zIndex: 1000,
+      padding: '10px',
+      width: '100%',
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: 400, maxWidth: '100%', border: '1px solid black',
         borderRadius: '10px',
@@ -151,15 +170,50 @@ const RedditAnalyzer = () => {
           )
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100vh' }}>
-            <Box sx={{ padding: '16px', borderBottom: '1px solid #ccc' }}>
-              <Typography variant="h6">{selectedPost?.title}</Typography>
-              <Typography variant="body2" sx={{ marginTop: '8px' }}>
-                {selectedPostData?.body ? (
-                  selectedPostData.body
-                ) : (
-                  <CircularProgress size={20} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', borderBottom: '1px solid #ccc' }}>
+            <Paper elevation={3} sx={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f7f7f7' }}>
+              <Fade in={!!selectedPost?.title} timeout={800}>
+                <Typography variant="h6" gutterBottom sx={{
+                  fontWeight: 'bold',
+                  color: '#1a1a1a',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+                }}>
+                  {selectedPost?.title || <Skeleton width="80%" />}
+                </Typography>
+              </Fade>
+              <Fade in={!!selectedPostData?.body} timeout={1000}>
+                <Box>
+                <Typography variant="body1" ref={contentRef} sx={{
+                  marginTop: '12px',
+                  lineHeight: 1.6,
+                  color: '#333',
+                  '&::first-letter': {
+                    fontSize: '1.5em',
+                    fontWeight: 'bold',
+                    color: '#4a4a4a',
+                  },
+                  maxHeight: expanded? 'none' : '20vh',
+                  overflow: 'hidden',
+                  transition: 'max-height 0.3s ease-in-out',
+                }}>
+                  {selectedPostData?.body ? (
+                    selectedPostData.body
+                  ) : (
+                    <Skeleton variant="text" width="100%" height={100} />
+                  )}
+                </Typography>
+                {contentRef.current && contentRef.current.scrollHeight > window.innerHeight * 0.2 && (
+                  <Button
+                    onClick={toggleExpand}
+                    startIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    sx={{ alignSelf: 'center', marginTop: '8px' }}
+                  >
+                    {expanded ? 'Show Less' : 'Show More'}
+                  </Button>
                 )}
-              </Typography>
+                </Box>
+              </Fade>
+            </Paper>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
               <Box sx={{ display: 'flex', width: '50%', height: '100%', justifyContent: 'center' }}>
