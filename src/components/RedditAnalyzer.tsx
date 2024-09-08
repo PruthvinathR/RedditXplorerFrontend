@@ -147,7 +147,7 @@ const RedditAnalyzer = () => {
   height: '100%', 
   display: 'flex', 
   justifyContent: 'center',  }}>
-                <ChatBox />
+                <ChatBox post_id={selectedPostData?.post_id || ""} />
               </Box>
             </Box>
           </Box>

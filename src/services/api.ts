@@ -8,3 +8,6 @@ export const getPosts = ((searchQuery: string, sortBy: string) =>
 
 export const analyzePost = (post_id: string) =>
   axios.get(`${API_URL}/post?post_id=${post_id}`);
+
+export const getChatResponse = (post_id: string, message: string) =>
+  axios.get(`${API_URL}/chat?post_id=${post_id}&message=${message}`);

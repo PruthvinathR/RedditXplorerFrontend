@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Paper, Typography } from '@mui/material';
 import { SendIcon } from 'lucide-react';
+import { getChatResponse } from '../services/api';
 
 interface Message {
   text: string;
   sender: 'user' | 'bot';
 }
 
-const ChatBox: React.FC = () => {
+interface ChatBoxProps {
+  post_id: string;
+}
+
+const ChatBox: React.FC<ChatBoxProps> = ({ post_id }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
 
@@ -15,10 +20,10 @@ const ChatBox: React.FC = () => {
     if (input.trim()) {
       setMessages([...messages, { text: input, sender: 'user' }]);
       setInput('');
-      // Simulate a bot response
-      setTimeout(() => {
-        setMessages(prev => [...prev, { text: 'This is a bot response.', sender: 'bot' }]);
-      }, 1000);
+      getChatResponse(post_id, input).then((response) => {
+        setMessages(prev => [...prev, { text: response.data['response'], sender: 'bot' }]);
+        console.log(response.data);
+      });
     }
   };
 
