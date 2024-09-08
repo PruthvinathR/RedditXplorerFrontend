@@ -5,7 +5,7 @@ import { getChatResponse } from '../services/api';
 
 interface Message {
   text: string;
-  sender: 'user' | 'bot';
+  sender: 'human' | 'ai';
 }
 
 interface ChatBoxProps {
@@ -15,14 +15,17 @@ interface ChatBoxProps {
 const ChatBox: React.FC<ChatBoxProps> = ({ post_id }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [chatHistory, setChatHistory] = useState<Array<[string, string]>>([]);
 
   const handleSend = () => {
     if (input.trim()) {
-      setMessages([...messages, { text: input, sender: 'user' }]);
+      setMessages([...messages, { text: input, sender: 'human' }]);
       setInput('');
-      getChatResponse(post_id, input).then((response) => {
-        setMessages(prev => [...prev, { text: response.data['response'], sender: 'bot' }]);
+      setChatHistory([...chatHistory, ['human', input]]);
+      getChatResponse(post_id, input, chatHistory).then((response) => {
+        setMessages(prev => [...prev, { text: response.data['response'], sender: 'ai' }]);
         console.log(response.data);
+        setChatHistory([...chatHistory, ['ai', response.data['response']]]);
       });
     }
   };
@@ -34,8 +37,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ post_id }) => {
       </Typography>
       <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
         {messages.map((message, index) => (
-          <Box key={index} sx={{ mb: 1, textAlign: message.sender === 'user' ? 'right' : 'left' }}>
-            <Paper elevation={1} sx={{ p: 1, display: 'inline-block', bgcolor: message.sender === 'user' ? 'primary.light' : 'grey.200' }}>
+          <Box key={index} sx={{ mb: 1, textAlign: message.sender === 'human' ? 'right' : 'left' }}>
+            <Paper elevation={1} sx={{ p: 1, display: 'inline-block', bgcolor: message.sender === 'human' ? 'primary.light' : 'grey.200' }}>
               <Typography variant="body2">{message.text}</Typography>
             </Paper>
           </Box>
