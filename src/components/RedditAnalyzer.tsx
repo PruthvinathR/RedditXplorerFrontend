@@ -84,10 +84,14 @@ const RedditAnalyzer = () => {
     setSelectedPost(null);
     setSelectedPostData(null);
     setData([]);
-    getPosts(searchQuery, sortBy).then((response) => {
+    if (searchQuery.trim() !== '') {
+      setSubmitted(true);
+      getPosts(searchQuery, sortBy).then((response) => {
       setData(response.data);
-      console.log(response.data);
-    });
+        console.log(response.data);
+      });
+    }
+    
   };
 
   const handleRowClick = (id: string) => {
