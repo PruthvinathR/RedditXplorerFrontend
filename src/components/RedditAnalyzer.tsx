@@ -33,6 +33,8 @@ const RedditAnalyzer = () => {
 
   const { chatWindowShown, setChatWindowShown } = useContext(GlobalContext);
 
+  const postDetailsHeight = 0.1;
+
   const sortOptions = [
     { value: 'top', label: 'Top' },
     { value: 'new', label: 'New' },
@@ -44,7 +46,7 @@ const RedditAnalyzer = () => {
     if (contentRef.current) {
       const contentHeight = contentRef.current.scrollHeight;
       const screenHeight = window.innerHeight;
-      setExpanded(contentHeight <= screenHeight * 0.20);
+      setExpanded(contentHeight <= screenHeight * postDetailsHeight);
     }
   }, [selectedPost, selectedPostData]);
 
@@ -192,7 +194,7 @@ const RedditAnalyzer = () => {
                     fontWeight: 'bold',
                     color: '#4a4a4a',
                   },
-                  maxHeight: expanded? 'none' : '20vh',
+                  maxHeight: expanded? 'none' : '10vh',
                   overflow: 'hidden',
                   transition: 'max-height 0.3s ease-in-out',
                 }}>
@@ -202,11 +204,11 @@ const RedditAnalyzer = () => {
                     <Skeleton variant="text" width="100%" height={100} />
                   )}
                 </Typography>
-                {contentRef.current && contentRef.current.scrollHeight > window.innerHeight * 0.2 && (
+                {contentRef.current && contentRef.current.scrollHeight > window.innerHeight * postDetailsHeight && (
                   <Button
                     onClick={toggleExpand}
                     startIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    sx={{ alignSelf: 'center', marginTop: '8px' }}
+                    sx={{ alignSelf: 'center', marginTop: '8px', fontSize: '12px' }}
                   >
                     {expanded ? 'Show Less' : 'Show More'}
                   </Button>
