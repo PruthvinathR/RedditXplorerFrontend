@@ -24,7 +24,7 @@ const RedditAnalyzer = () => {
   const [sortBy, setSortBy] = useState('');
   const [data, setData] = useState<RedditPost[]>([]);
   const [selectedPost, setSelectedPost] = useState<RedditPost | null>(null);
-  const [selectedPostData, setSelectedPostData] = useState<RedditPost>();
+  const [selectedPostData, setSelectedPostData] = useState<RedditPost | null>(null);
 
   const { chatWindowShown, setChatWindowShown } = useContext(GlobalContext);
 
@@ -38,9 +38,21 @@ const RedditAnalyzer = () => {
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log(process.env.REACT_APP_BACKEND_URL);
     if (e.key === 'Enter') {
-      setSubmitted(true);
+      
       setChatWindowShown(false);
-      getPosts(searchQuery, sortBy).then((response) => {
+      setSelectedPost(null);
+      setSelectedPostData(null);
+      const effectiveSortBy = sortBy || 'hot';
+      if (sortBy === '') setSortBy('hot');
+
+      if (searchQuery.trim() === '') {
+        alert('Please enter a subreddit to search.');
+        setSubmitted(false);
+        return;
+      }
+      setSubmitted(true);
+      setData([]);
+      getPosts(searchQuery, effectiveSortBy).then((response) => {
         setData(response.data);
         console.log(response.data);
       });
@@ -50,6 +62,13 @@ const RedditAnalyzer = () => {
   const handleSort = (event: SelectChangeEvent) => {
     setSortBy(event.target.value);
     setChatWindowShown(false);
+    setSelectedPost(null);
+    setSelectedPostData(null);
+    setData([]);
+    getPosts(searchQuery, sortBy).then((response) => {
+      setData(response.data);
+      console.log(response.data);
+    });
   };
 
   const handleRowClick = (id: string) => {
@@ -135,7 +154,11 @@ const RedditAnalyzer = () => {
             <Box sx={{ padding: '16px', borderBottom: '1px solid #ccc' }}>
               <Typography variant="h6">{selectedPost?.title}</Typography>
               <Typography variant="body2" sx={{ marginTop: '8px' }}>
-                {selectedPostData?.body || ""}
+                {selectedPostData?.body ? (
+                  selectedPostData.body
+                ) : (
+                  <CircularProgress size={20} />
+                )}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
