@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ReddiXplorerFrontend/static/css/main.728f39cb.css",
+    "main.js": "/ReddiXplorerFrontend/static/js/main.1fd3e555.js",
+    "index.html": "/ReddiXplorerFrontend/index.html",
+    "main.728f39cb.css.map": "/ReddiXplorerFrontend/static/css/main.728f39cb.css.map",
+    "main.1fd3e555.js.map": "/ReddiXplorerFrontend/static/js/main.1fd3e555.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.728f39cb.css",
+    "static/js/main.1fd3e555.js"
+  ]
+}
