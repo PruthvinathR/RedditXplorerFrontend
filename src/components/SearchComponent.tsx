@@ -7,7 +7,7 @@ const SearchComponent = ({ setSearchQuery, handleSearch }: { setSearchQuery: Rea
     <>
       <Search style={{ marginLeft: '10px', marginRight: '10px', color: 'black' }} />
       <InputBase
-        placeholder="Search a subreddit..."
+        placeholder="Search a subreddit... (Press Enter to search)"
         inputProps={{ 'aria-label': 'search' }}
         sx={{ color: 'black', width: '100%', alignItems: 'center' }}
         onChange={(e) => setSearchQuery(e.target.value)}

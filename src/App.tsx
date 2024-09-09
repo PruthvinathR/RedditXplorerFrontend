@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createTheme } from '@mui/material/styles';
 import AppWrapper from './AppWrapper';
 
 const theme = createTheme();

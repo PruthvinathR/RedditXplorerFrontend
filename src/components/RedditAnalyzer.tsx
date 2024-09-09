@@ -67,8 +67,8 @@ const RedditAnalyzer = () => {
       setChatWindowShown(false);
       setSelectedPost(null);
       setSelectedPostData(null);
-      const effectiveSortBy = sortBy || 'hot';
-      if (sortBy === '') setSortBy('hot');
+      const effectiveSortBy = sortBy || 'top';
+      if (sortBy === '') setSortBy('top');
 
       if (searchQuery.trim() === '') {
         alert('Please enter a subreddit to search.');
