@@ -124,6 +124,7 @@ const RedditAnalyzer = () => {
       zIndex: 1000,
       padding: '10px',
       width: '100%',
+      backgroundColor: 'white',
     }}>
         {chatWindowShown && (
           <Button
