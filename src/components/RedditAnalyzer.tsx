@@ -104,6 +104,12 @@ const RedditAnalyzer = () => {
     setChatWindowShown(true);
   };
 
+  const onBack = () => {
+    setChatWindowShown(false);
+    setSelectedPost(null);
+    setSelectedPostData(null);
+  };
+
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', 
         justifyContent: submitted ? 'flex-start' : 'center',
@@ -119,7 +125,15 @@ const RedditAnalyzer = () => {
       padding: '10px',
       width: '100%',
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', width: 400, maxWidth: '100%', border: '1px solid black',
+        {chatWindowShown && (
+          <Button
+            onClick={onBack}
+            sx={{ marginRight: '10px' }}
+          >
+            Back
+          </Button>
+        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', width: 400, maxWidth: '100%', border: '1px solid black',
         borderRadius: '10px',
           backgroundColor: 'white',
         }}> 
