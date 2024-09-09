@@ -55,7 +55,6 @@ const RedditAnalyzer = () => {
   };
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(process.env.REACT_APP_BACKEND_URL);
     if (e.key === 'Enter') {
       
       setChatWindowShown(false);
@@ -73,7 +72,14 @@ const RedditAnalyzer = () => {
       setData([]);
       getPosts(searchQuery, effectiveSortBy).then((response) => {
         setData(response.data);
-        console.log(response.data);
+      }).catch((error) => {
+        setSubmitted(false);
+        if (error.response.status === 500 ) {
+          alert('An error occurred while fetching posts. Please check your subreddit and try again.');
+        }
+        else {
+          alert('An error occurred while fetching posts. Please try again.');
+        }
       });
     }
   };
@@ -87,17 +93,22 @@ const RedditAnalyzer = () => {
     if (searchQuery.trim() !== '') {
       setSubmitted(true);
       getPosts(searchQuery, sortBy).then((response) => {
-      setData(response.data);
-        console.log(response.data);
+        setData(response.data);
+      }).catch((error) => {
+        setSubmitted(false);
+        if (error.response.status === 500 ) {
+          alert('An error occurred while fetching posts. Please check your subreddit and try again.');
+        }
+        else {
+          alert('An error occurred while fetching posts. Please try again.');
+        }
       });
     }
     
   };
 
   const handleRowClick = (id: string) => {
-    console.log(`Row clicked with id: ${id}`);
     analyzePost(id.toString()).then((response) => {
-      console.log(response.data);
       setSelectedPostData(response.data);
     });
     setSelectedPost(data.find((post: any) => post.post_id === id) as RedditPost);

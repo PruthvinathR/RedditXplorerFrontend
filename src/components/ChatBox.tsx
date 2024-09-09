@@ -29,8 +29,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ post_id }) => {
       setIsLoading(true);
       getChatResponse(post_id, input, chatHistory).then((response) => {
         setMessages(prev => [...prev, { text: response.data['response'], sender: 'ai' }]);
-        console.log(response.data);
         setChatHistory([...chatHistory, ['ai', response.data['response']]]);
+      }).catch((error) => {
+        alert('An error occurred while fetching the response. Please try again.');
       }).finally(() => {
         setIsLoading(false);
       });
