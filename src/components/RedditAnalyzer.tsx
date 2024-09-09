@@ -85,14 +85,15 @@ const RedditAnalyzer = () => {
   };
 
   const handleSort = (event: SelectChangeEvent) => {
-    setSortBy(event.target.value);
+    const sortValue = event.target.value;
+    setSortBy(() => sortValue);
     setChatWindowShown(false);
     setSelectedPost(null);
     setSelectedPostData(null);
     setData([]);
     if (searchQuery.trim() !== '') {
       setSubmitted(true);
-      getPosts(searchQuery, sortBy).then((response) => {
+      getPosts(searchQuery, sortValue).then((response) => {
         setData(response.data);
       }).catch((error) => {
         setSubmitted(false);
