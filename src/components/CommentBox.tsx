@@ -4,9 +4,10 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 interface CommentBoxProps {
   comments: string[];
+  commentsFound: boolean;
 }
 
-const CommentBox: React.FC<CommentBoxProps> = ({ comments }) => {
+const CommentBox: React.FC<CommentBoxProps> = ({ comments, commentsFound }) => {
   return (
     <Paper elevation={3} sx={{ p: 2, height: '70%', display: 'flex', flexDirection: 'column', marginTop: '30px', width: '80%' }}>
       <Typography variant="h6" gutterBottom>
@@ -44,7 +45,11 @@ const CommentBox: React.FC<CommentBoxProps> = ({ comments }) => {
         ))
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <CircularProgress size={20} />
+          {commentsFound ? (
+            <CircularProgress size={20} />
+          ) : (
+            <Typography variant="body1">No comments found</Typography>
+          )}
         </Box>
       )}
       </Box>

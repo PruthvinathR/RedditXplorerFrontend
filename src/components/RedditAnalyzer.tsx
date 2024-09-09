@@ -30,6 +30,7 @@ const RedditAnalyzer = () => {
   const [loading, setLoading] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
+  const [commentsFound, setCommentsFound] = useState(true);
 
   const { chatWindowShown, setChatWindowShown } = useContext(GlobalContext);
 
@@ -49,6 +50,12 @@ const RedditAnalyzer = () => {
       setExpanded(contentHeight <= screenHeight * postDetailsHeight);
     }
   }, [selectedPost, selectedPostData]);
+
+  useEffect(() => {
+    if (selectedPostData) {
+      setCommentsFound(selectedPostData.comments.length > 0);
+    }
+  }, [selectedPostData]);
 
   const toggleExpand = () => {
     setExpanded(expanded => !expanded);
@@ -74,10 +81,11 @@ const RedditAnalyzer = () => {
         setData(response.data);
       }).catch((error) => {
         setSubmitted(false);
-        if (error.response.status === 500 ) {
+        if (error.code === 'ECONNABORTED') {
+          alert('The request timed out. Please try again.');
+        } else if (error.response && error.response.status === 500) {
           alert('An error occurred while fetching posts. Please check your subreddit and try again.');
-        }
-        else {
+        } else {
           alert('An error occurred while fetching posts. Please try again.');
         }
       });
@@ -97,10 +105,11 @@ const RedditAnalyzer = () => {
         setData(response.data);
       }).catch((error) => {
         setSubmitted(false);
-        if (error.response.status === 500 ) {
+        if (error.code === 'ECONNABORTED') {
+          alert('The request timed out. Please try again.');
+        } else if (error.response && error.response.status === 500) {
           alert('An error occurred while fetching posts. Please check your subreddit and try again.');
-        }
-        else {
+        } else {
           alert('An error occurred while fetching posts. Please try again.');
         }
       });
@@ -109,9 +118,13 @@ const RedditAnalyzer = () => {
   };
 
   const handleRowClick = (id: string) => {
+    setCommentsFound(true);
+    let comments = [];
     analyzePost(id.toString()).then((response) => {
       setSelectedPostData(response.data);
-    });
+      comments = response.data.comments;
+    })
+
     setSelectedPost(data.find((post: any) => post.post_id === id) as RedditPost);
     setChatWindowShown(true);
   };
@@ -250,7 +263,7 @@ const RedditAnalyzer = () => {
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
               <Box sx={{ display: 'flex', width: '50%', height: '100%', justifyContent: 'center' }}>
-                <CommentBox comments={selectedPostData?.comments || []} />
+                <CommentBox comments={selectedPostData?.comments || []} commentsFound={commentsFound} /> 
               </Box>
               <Divider orientation="vertical" flexItem />
               <Box sx={{ width: '50%', 
